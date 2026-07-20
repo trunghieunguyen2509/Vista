@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Website Layout</title>
+    <!-- Connect to a Google Font (e.g., Outfit) and your stylesheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename ='style.css') }}">
+</head>
+
+<body class="layout-container">
+
+    <!-- 1. Header (Logo & 5 Nav Links) -->
+    <header class="header">
+        <a href="/" class="logo">
+            <!-- Logo element/text goes here -->
+            <img src="/static/images/vista-logo.webp" class="logo-strip-bg" width="200" height="100">
+        </a>
+        <nav class="navigation">
+            <!-- 5 navigation links go here -->
+            <a href="/rates">Rates</a>
+            <a href="/reserve">Reserve</a>
+            <a href="/news">News</a>
+            <a href="/contact">Contact</a>
+            <a href="/login">Login</a>
+        </nav>
+    </header>
+
+    <!-- 2. Main Content Area -->
+    <main class="content-area">
+        {% block content %}
+
+        {% endblock %}
+    </main>
+
+    <!-- 3. Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 Vista Currency Exchange. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>
