@@ -1,6 +1,141 @@
 {% extends "layouts.html" %}
-
 {% block content %}
-<h1>Welcome to Vista Currency Exchange</h1>
-<p>This is the homepage content injected inside our layout template!</p>
+<section class="hero-container">
+    <!-- Left Column: Copy & Actions -->
+    <div class="hero-content">
+        <h1 class="hero-title">Exchange Money with <span class="highlight">0 Fees</span></h1>
+        <p class="hero-subtitle">Convert to 40+ currencies instantly with competitive rates.</p>
+
+        <!-- Stats highlight row -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <span class="stat-number">40+</span>
+                <span class="stat-label">Currencies</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">0%</span>
+                <span class="stat-label">Transfer Fees</span>
+            </div>
+        </div>
+
+        <div class="cta-buttons">
+            <a href="/reserve" class="btn-primary">Start Converting</a>
+        </div>
+    </div>
+
+    <!-- Right Column: Visual Mockup -->
+    <div class="hero-mockup">
+        <img src="static/images/exchange-homepage.jpg" alt="App Mockup" class="mockup-img">
+    </div>
+</section>
+
+<section class="store-section">
+    <!-- Left Column: Details -->
+    <div class="store-details">
+        <h2 class="section-title">Visit Our Store</h2>
+
+        <div class="info-group">
+            <h3>Address</h3>
+            <p>260A Liverpool Road, Ashfield, NSW 2131</p>
+            <p>Ashfield Mall, Level 4, Shop 50, Vista Currency Exchange</p>
+        </div>
+
+        <div class="info-group">
+            <h3>Phone Number</h3>
+            <p><a href="tel:(02) 9798 7872">(02) 9798 7872</a></p>
+        </div>
+
+        <div class="info-group">
+            <h3>Trading Hours</h3>
+            <ul class="hours-list">
+                <li><strong>Mon - Fri:</strong> 9:00 AM - 5:00 PM</li>
+                <li><strong>Saturday:</strong> 9:00 AM - 5:00 PM</li>
+                <li><strong>Sunday:</strong> 10:00 AM - 4:00 PM</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Right Column: Visual Store Image -->
+    <div class="store-visual">
+        <img src="static/images/vista-homepage.webp" alt="Vista Storefront" class="store-img">
+    </div>
+</section>
+
+<section class="features-section">
+    <!-- Left-aligned Section Header -->
+    <div class="features-header">
+        <h2 class="features-title">WHY CHOOSE<br>VISTA</h2>
+    </div>
+
+    <!-- The Staggered Columns Wrapper -->
+    <div class="features-grid">
+
+        <!-- Column 1 (Pushed lowest) -->
+        <div class="features-col col-1">
+            <div class="card card-accent">
+                <div class="card-icon-container"><!-- SVG Icon --></div>
+                <h3>Zero Hidden Fees</h3>
+                <p>Clear, upfront pricing with no surprise charges at checkout.</p>
+            </div>
+        </div>
+
+        <!-- Column 2 (Pushed medium) -->
+        <div class="features-col col-2">
+            <div class="card">
+                <div class="card-icon-container"><!-- SVG Icon --></div>
+                <h3>Guaranteed Local Stock</h3>
+                <p>Walk out with the exact currencies you need, right away.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon-container"><!-- SVG Icon --></div>
+                <h3>Best Exchange Rate</h3>
+                <p>Keep more of your money for your actual trip.</p>
+            </div>
+        </div>
+
+        <!-- Column 3 (Pushed slightly) -->
+        <div class="features-col col-3">
+            <div class="card">
+                <div class="card-icon-container"><!-- SVG Icon --></div>
+                <h3>Trusted Local Experts</h3>
+                <p>Tailored advice from Sydney currency specialists.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon-container"><!-- SVG Icon --></div>
+                <h3>Clean, Crisp Banknotes</h3>
+                <p>Travel with stress-free currency accepted anywhere.</p>
+            </div>
+        </div>
+
+        <!-- Column 4 (Highest/No offset) -->
+        <div class="features-col col-4">
+            <div class="card">
+                <div class="card-icon-container"><!-- SVG Icon --></div>
+                <h3>Registered With AUSTRAC</h3>
+                <p>100% compliant, secure, and officially regulated.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon-container"><!-- SVG Icon --></div>
+                <h3>Customized Bill Denominations</h3>
+                <p>Get small notes for tips, cabs, and night markets.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="currency-section">
+    <h2 class="section-title">Buy 40+ Foreign Currencies. <span class="highlight">Stock Always Available.</span></h2>
+
+    <div class="currency-grid">
+        {% for currency in currencies %}
+        <div class="currency-card">
+            <img src="https://flagcdn.com/w40/{{ currency.flag }}.png" width="30" alt="{{ currency.code }} Flag"
+                class="flag-icon">
+            <span class="currency-code">{{ currency.code }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
 {% endblock %}

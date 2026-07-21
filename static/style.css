@@ -1,25 +1,4 @@
 /* Conceptual Stylesheet */
-.layout-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    /* Takes full viewport height */
-    margin: 0;
-    font-family: 'Outfit', sans-serif;
-    background-color: #121212;
-    /* Matte Black theme */
-    color: #ffffff;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    /* Pushes logo to left, nav to right */
-    align-items: center;
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid #2a2a2a;
-}
-
 .content-area {
     flex-grow: 1;
     /* Instructs the main content to fill all available vertical space */
@@ -32,9 +11,403 @@
     border-top: 1px solid #2a2a2a;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+    /* Pushes logo to left, nav to right */
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.logo {
+    margin-left: 4rem;
+    /* Pushes the logo to the right */
+}
+
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* Takes full viewport height */
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    background-color: #ffffff;
+    /* Matte Black theme */
+    color: #000000;
+}
+
 .logo-strip-bg {
     /* 1. Invert the image colors */
-    filter: invert(1) hue-rotate(180deg);
+    filter: invert(0) hue-rotate(0deg);
     /* 2. Blend it with the dark background */
-    mix-blend-mode: screen;
+    mix-blend-mode: multiply;
+}
+
+.navigation {
+    display: flex;
+    gap: 3rem;
+    margin-right: 4rem;
+}
+
+/* Base style for the links */
+.navigation a {
+    text-decoration: none;
+    color: #333333;
+    /* Clean dark color */
+    font-size: 1.2rem;
+    font-weight: 500;
+    /* Clean, semi-bold font weight */
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+    /* Animate color changes over 0.3 seconds */
+}
+
+/* Hover style for the links */
+.navigation a:hover {
+    color: red;
+    /* Replace with your desired shade of red */
+}
+
+.hero-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f8f9fa;
+    border-radius: 16px;
+    gap: 2rem;
+    padding: 4rem 2rem;
+}
+
+.hero-content {
+    flex: 1 1 500px;
+    /* Grow/shrink, baseline width of 500px */
+}
+
+.hero-mockup {
+    flex: 1 1 400px;
+    text-align: center;
+}
+
+.mockup-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+.mockup-img:hover {
+    transform: translateY(-4px);
+    /* Gently lifts image */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    /* Deepens shadow */
+}
+
+/* Style the big stats numbers */
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #e50914;
+    /* Red accent matching your hover style */
+}
+
+/* 1. Typography & Hierarchy */
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: #111111;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: #666666;
+    /* Muted color for hierarchy */
+    margin-bottom: 2rem;
+}
+
+.highlight {
+    color: #e50914;
+    /* Red accent */
+}
+
+/* 2. Stats Grid */
+.stats-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-card {
+    flex: 1;
+    padding: 1.5rem;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    background-color: #fcfcfc;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #666666;
+    margin-top: 0.5rem;
+}
+
+/* 3. Call To Action Button */
+.btn-primary {
+    display: inline-block;
+    background-color: #e50914;
+    /* Accent color */
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #b80710;
+    /* Darker red */
+    transform: translateY(-2px);
+    /* Subtle lift */
+}
+
+
+/* Store section */
+.store-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 35rem;
+    padding: 5rem 3rem;
+    /* Spacious padding */
+    background-color: #f8f9fa;
+    /* Soft light gray background */
+    border-radius: 16px;
+    /* Rounded container corners */
+    align-items: center;
+    margin-top: 2rem;
+    /* Space below the hero */
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #e50914;
+    /* Red accent matching your hover style */
+}
+
+/* 2. Info Groups & Labels */
+.info-group {
+    margin-bottom: 1.8rem;
+    font-weight: 500;
+}
+
+.info-group h3 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888888;
+    /* Muted label color */
+    margin-bottom: 0.4rem;
+    font-weight: bold;
+}
+
+.info-group p,
+.info-group a {
+    font-size: 1.1rem;
+    color: #222222;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.info-group a:hover {
+    color: #e50914;
+    /* Accent color transition on hover */
+}
+
+/* 3. Trading Hours List */
+.hours-list {
+    list-style: none;
+    /* Removes bullets */
+    padding: 0;
+    max-width: 400px;
+    /* Constrains list width */
+}
+
+.hours-list li {
+    display: flex;
+    justify-content: space-between;
+    /* Aligns days to left, hours to right */
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed #eaeaea;
+    /* Adds thin line separating rows */
+    font-size: 1rem;
+    color: #333333;
+}
+
+/* 4. Hover Micro-animation for Image */
+.store-img {
+    width: 100%;
+    max-width: 480px;
+    /* Limit the absolute size on desktop */
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.store-img:hover {
+    transform: translateY(-4px);
+    /* Gently lifts image */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    /* Deepens shadow */
+}
+
+.store-visual {
+    flex: 1 1 300px;
+    /* Smaller flex-grow ratio */
+    text-align: right;
+    /* Align image content to the right edge */
+}
+
+/* Why choose us? */
+.features-section {
+    padding: 6rem 2rem;
+    background-color: #f8f9fa;
+    border-radius: 16px;
+    margin-top: 3rem;
+}
+
+.features-title {
+    font-size: 3rem;
+    font-weight: 800;
+    font-style: italic;
+    /* Matches the italic heading in the design */
+    line-height: 1.1;
+    color: #111111;
+    margin-bottom: 3rem;
+}
+
+/* Flex layout for columns */
+.features-grid {
+    display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+}
+
+.features-col {
+    flex: 1 1 22%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Staggering offsets (highest on right, descending to left) */
+.col-1 {
+    margin-top: 150px;
+}
+
+.col-2 {
+    margin-top: 100px;
+}
+
+.col-3 {
+    margin-top: 50px;
+}
+
+.col-4 {
+    margin-top: 0;
+}
+
+/* Styling the cards */
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    /* Soft premium shadow */
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    background-color: #e50914;
+    color: #ffffff;
+}
+
+/* Red accent card */
+.card-accent {
+    background-color: #ffffff;
+    /* Red background */
+    color: #000000;
+}
+
+/* Mobile Responsive - Flatten Staggering */
+@media (max-width: 992px) {
+    .features-grid {
+        flex-direction: column;
+    }
+
+    /* Remove offsets so cards sit flat */
+    .col-1,
+    .col-2,
+    .col-3,
+    .col-4 {
+        margin-top: 0;
+    }
+}
+
+
+/* Currency section */
+.currency-section {
+    padding: 5rem 3rem;
+    background-color: #ffffff;
+    border-radius: 16px;
+    margin-top: 3rem;
+    text-align: center;
+}
+
+/* Grid of cards */
+.currency-grid {
+    display: grid;
+    /* Automatically fit as many 140px wide cards as possible */
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+/* Single currency card */
+.currency-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1.2rem;
+    background-color: #f8f9fa;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover effect */
+.currency-card:hover {
+    border-color: #e50914;
+    /* Red highlight on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.1);
+    background-color: #ffffff;
+}
+
+.flag-icon {
+    border-radius: 3px;
+    /* Slightly round the flag edges */
+    object-fit: cover;
+}
+
+.currency-code {
+    font-weight: 600;
+    color: #222222;
 }
