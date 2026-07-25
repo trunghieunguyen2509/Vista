@@ -17,7 +17,11 @@
     /* Pushes logo to left, nav to right */
     align-items: center;
     padding: 1.5rem 2rem;
-    border-bottom: 1px solid #2a2a2a;
+    border-bottom: 0px solid #2a2a2a;
+    position: sticky;
+    background-color: #f5f5f5CC;
+    top: 0;
+    backdrop-filter: blur(6px);
 }
 
 .logo {
@@ -410,4 +414,30 @@
 .currency-code {
     font-weight: 600;
     color: #222222;
+}
+
+
+/* Currency calculator */
+/* Conceptual CSS blueprint for style.css */
+
+.hero-currency-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 3rem;
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    /* Allows stacking on smaller mobile screens */
+}
+
+/* Left text column takes available space */
+.hero-text-column {
+    flex: 1 1 450px;
+}
+
+/* Right card column stays at a clean fixed width */
+.calculator-card-column {
+    flex: 0 0 440px;
 }

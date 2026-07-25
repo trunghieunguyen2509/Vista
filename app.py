@@ -1,4 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
+import requests
+import time
 
 # Initialize flask applkication
 app = Flask(__name__)
@@ -35,13 +37,17 @@ currencies = [
         {"code": "HUF", "flag": "hu"},
         {"code": "MXN", "flag": "mx"},
         {"code": "VUV", "flag": "vu"},
-        {"code": "QAR", "flag": "qa"},
-        {"code": "NOK", "flag": "no"}
-    ]     
+        {"code": "NOK", "flag": "no"},
+        {"code": "AUD", "flag": "au"}
+    ]
+
 # Define route
 @app.route("/")
 def index():
     return render_template('index.html', currencies=currencies)
 
+@app.route("/buy-currency")
+def buy_currency():
+    return render_template('buy-currency.html', currencies=currencies)
 if __name__ == '__main__':
     app.run(debug=True)
