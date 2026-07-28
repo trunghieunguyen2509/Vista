@@ -21,8 +21,9 @@ audInput.addEventListener('input', () => {
     const rate = getRate();
     const audVal = parseFloat(audInput.value);
 
+
     // Check if the input is empty or invalid
-    if (isNaN(audVal)) {
+    if (isNaN(audVal || audVal < 0)) {
         foreignInput.value = ''; // Clear the other box
     } else {
         foreignInput.value = (audVal * rate).toFixed(2);

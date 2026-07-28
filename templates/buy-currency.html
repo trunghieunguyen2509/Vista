@@ -1,7 +1,36 @@
 {% extends "layouts.html" %}
-
 {% block content %}
-<section class="buy-currency-container">
 
+<section class="buy-currency-container">
+    <div class="buy-currency-text">
+        <h1>BUY<br>FOREIGN CURRENCY<br>AT THE <span class="highlight">BEST RATE</span></h1>
+        <p>Fast and fee-free: get your foreign currency at top rates in just 24 hours.</p>
+    </div>
+    <div class="converter-card">
+        <h2>Convert Australian Dollar</h2>
+        <p id="rate-display">Select a currency to see rate</p>
+
+        <!-- AUD Input -->
+        <div class="input-row">
+            <span><strong>AUD - Australian Dollar</strong></span>
+            <input type="number" id="aud-input" placeholder="0.00">
+        </div>
+
+        <!-- Foreign Input + Dropdown -->
+        <div class="input-row">
+            <select id="currency-select">
+                {% for currency in currencies %}
+                <option value="{{ currency.code }}" data-rate="{{ currency.rate }}">
+                    {{ currency.code }} - {{ currency.name }}
+                </option>
+                {% endfor %}
+            </select>
+            <input type="number" id="foreign-input" placeholder="0.00">
+        </div>
+    </div>
 </section>
+
+<!-- Place script tag at bottom after DOM elements exist -->
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
 {% endblock %}
