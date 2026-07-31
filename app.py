@@ -84,14 +84,13 @@ def index():
 def buy_currency():
     return render_template('buy-currency.html', currencies=currencies)
 
-if __name__ == '__main__':
-    # Fetch the rate immediately
-    fetch_exchange_rate()
-    #Start background scheduler run on a separate thread so it doesn't block Flask
+fetch_exchange_rate() # Initial fetch when the app starts
+if not (app.debug and os.environ.get('WERKZEUG_RUN_MAIN') != 'true'):
     scheduler = BackgroundScheduler()
-    scheduler.add_job(fetch_exchange_rate, 'interval', hours = 2)
-    if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
-        scheduler.start()
+    scheduler.add_job(fetch_exchange_rate, 'interval', hours=1)
+    scheduler.start()
+
+if __name__ == '__main__':
     app.run(debug=True)
     
 
