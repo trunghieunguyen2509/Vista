@@ -12,21 +12,44 @@
 
         <!-- AUD Input -->
         <div class="input-row">
-            <span><strong>AUD - Australian Dollar</strong></span>
-            <input type="number" id="aud-input" placeholder="0.00">
+            <label for="aud-input">
+                <img src="https://flagcdn.com/w40/au.png" alt="" class="dropdown-flag">
+                <strong>AUD - Australian Dollar</strong>
+            </label>
+            <input type="number" id="aud-input" placeholder="0.00" aria-label="Amount in Australian Dollars">
+
         </div>
 
         <!-- Foreign Input + Dropdown -->
-        <div class="input-row">
-            <select id="currency-select">
-                {% for currency in currencies %}
-                <option value="{{ currency.code }}" data-rate="{{ currency.rate }}">
-                    {{ currency.code }} - {{ currency.name }}
-                </option>
+    <div class="input-row">
+        <div class="currency-dropdown" id="currency-dropdown">
+            <button type="button" class="dropdown-toggle" id="dropdown-toggle"
+                    aria-haspopup="listbox" aria-expanded="false">
+                <img src="https://flagcdn.com/w40/{{ currencies[0].flag }}.png" alt=""
+                    class="dropdown-flag" id="selected-flag">
+                <span id="selected-label">{{ currencies[0].code }}</span>
+            </button>
+            <ul class="dropdown-list" id="dropdown-list" role="listbox" hidden>
+                {% for currency in currencies if currency.code != 'AUD' %}
+                <li class="dropdown-option" role="option"
+                    data-code="{{ currency.code }}" data-flag="{{ currency.flag }}">
+                    <img src="https://flagcdn.com/w40/{{ currency.flag }}.png" alt="" class="dropdown-flag">
+                    <span>{{ currency.code }} - {{ currency.name }}</span>
+                </li>
                 {% endfor %}
-            </select>
-            <input type="number" id="foreign-input" placeholder="0.00">
+            </ul>
         </div>
+
+    <select id="currency-select">
+        {% for currency in currencies if currency.code != 'AUD' %}
+        <option value="{{ currency.code }}" data-rate="{{ currency.rate }}">
+            {{ currency.code }} - {{ currency.name }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <input type="number" id="foreign-input" placeholder="0.00">
+</div>
     </div>
 </section>
 

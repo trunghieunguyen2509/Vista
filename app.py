@@ -84,14 +84,16 @@ def index():
 def buy_currency():
     return render_template('buy-currency.html', currencies=currencies)
 
-fetch_exchange_rate() # Initial fetch when the app starts
-if not (app.debug and os.environ.get('WERKZEUG_RUN_MAIN') != 'true'):
+DEBUG = True
+
+fetch_exchange_rate()
+if not DEBUG or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
     scheduler = BackgroundScheduler()
     scheduler.add_job(fetch_exchange_rate, 'interval', hours=1)
     scheduler.start()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=DEBUG)
     
 
 
