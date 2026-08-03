@@ -11,28 +11,28 @@ app = Flask(__name__)
 
 # 1. Define the currency list data
 currencies = [
-    {"code": "USD", "name": "United States Dollar", "flag": "us", "margin": 0},
-    {"code": "GBP", "name": "British Pound Sterling", "flag": "gb", "margin": 0},
-    {"code": "EUR", "name": "Euro", "flag": "eu", "margin": 0},
-    {"code": "JPY", "name": "Japanese Yen", "flag": "jp", "margin": 0},
-    {"code": "HKD", "name": "Hong Kong Dollar", "flag": "hk", "margin": 0},
-    {"code": "THB", "name": "Thai Baht", "flag": "th", "margin": 0},
-    {"code": "SGD", "name": "Singapore Dollar", "flag": "sg", "margin": 0},
-    {"code": "NZD", "name": "New Zealand Dollar", "flag": "nz", "margin": 0},
-    {"code": "FJD", "name": "Fijian Dollar", "flag": "fj", "margin": 0},
-    {"code": "CNY", "name": "Chinese Yuan", "flag": "cn", "margin": 0},
-    {"code": "CAD", "name": "Canadian Dollar", "flag": "ca", "margin": 0},
-    {"code": "IDR", "name": "Indonesian Rupiah", "flag": "id", "margin": 0},
-    {"code": "PHP", "name": "Philippine Peso", "flag": "ph", "margin": 0},
-    {"code": "INR", "name": "Indian Rupee", "flag": "in", "margin": 0},
-    {"code": "AED", "name": "United Arab Emirates Dirham", "flag": "ae", "margin": 0},
-    {"code": "KRW", "name": "South Korean Won", "flag": "kr", "margin": 0},
-    {"code": "MYR", "name": "Malaysian Ringgit", "flag": "my", "margin": 0},
+    {"code": "USD", "name": "United States Dollar", "flag": "us", "margin": 0.02},
+    {"code": "GBP", "name": "British Pound Sterling", "flag": "gb", "margin": 0.02},
+    {"code": "EUR", "name": "Euro", "flag": "eu", "margin": 0.02},
+    {"code": "JPY", "name": "Japanese Yen", "flag": "jp", "margin": 4},
+    {"code": "HKD", "name": "Hong Kong Dollar", "flag": "hk", "margin": 0.2},
+    {"code": "THB", "name": "Thai Baht", "flag": "th", "margin": 1.5},
+    {"code": "SGD", "name": "Singapore Dollar", "flag": "sg", "margin": 0.04},
+    {"code": "NZD", "name": "New Zealand Dollar", "flag": "nz", "margin": 0.04},
+    {"code": "FJD", "name": "Fijian Dollar", "flag": "fj", "margin": 0.8},
+    {"code": "CNY", "name": "Chinese Yuan", "flag": "cn", "margin": 0.2},
+    {"code": "CAD", "name": "Canadian Dollar", "flag": "ca", "margin": 0.04},
+    {"code": "IDR", "name": "Indonesian Rupiah", "flag": "id", "margin": 900},
+    {"code": "PHP", "name": "Philippine Peso", "flag": "ph", "margin": 3.5},
+    {"code": "INR", "name": "Indian Rupee", "flag": "in", "margin": 5.5},
+    {"code": "AED", "name": "United Arab Emirates Dirham", "flag": "ae", "margin": 0.2},
+    {"code": "KRW", "name": "South Korean Won", "flag": "kr", "margin": 90},
+    {"code": "MYR", "name": "Malaysian Ringgit", "flag": "my", "margin": 0.2},
     {"code": "ZAR", "name": "South African Rand", "flag": "za", "margin": 0},
-    {"code": "VND", "name": "Vietnamese Dong", "flag": "vn", "margin": 0},
-    {"code": "TWD", "name": "New Taiwan Dollar", "flag": "tw", "margin": 0},
-    {"code": "CHF", "name": "Swiss Franc", "flag": "ch", "margin": 0},
-    {"code": "TRY", "name": "Turkish Lira", "flag": "tr", "margin": 0},
+    {"code": "VND", "name": "Vietnamese Dong", "flag": "vn", "margin": 1500},
+    {"code": "TWD", "name": "New Taiwan Dollar", "flag": "tw", "margin": 2},
+    {"code": "CHF", "name": "Swiss Franc", "flag": "ch", "margin": 0.022},
+    {"code": "TRY", "name": "Turkish Lira", "flag": "tr", "margin": 3.5},
     {"code": "XPF", "name": "CFP Franc", "flag": "pf", "margin": 0},
     {"code": "DKK", "name": "Danish Krone", "flag": "dk", "margin": 0},
     {"code": "SEK", "name": "Swedish Krona", "flag": "se", "margin": 0},
@@ -67,8 +67,9 @@ def fetch_exchange_rate():
         current_time = time.strftime('%Y-%m-%d %H:%M:%S')
         for currency in currencies:
             code = currency["code"]
+            raw_rate = all_rates.get(code)
             # Fallback to None if code isn't found
-            currency["rate"] = all_rates.get(code) 
+            currency["rate"] = raw_rate - currency["margin"] if raw_rate is not None else None
             print(f"[{current_time}] Updated {code}: {currency['rate']}")
 
     except requests.exceptions.RequestException as e:
