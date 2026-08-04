@@ -1,0 +1,39 @@
+{% extends "layouts.html" %}
+{% block content %}
+
+<section class="cart-list-section">
+    <h2 class="section-title">Your Cart</h2>
+
+    {% if cart_items %}
+    <div class="cart-list">
+        {% for item in cart_items %}
+        <div class="cart-item">
+            <img src="https://flagcdn.com/w40/{{ item.flag }}.png" alt="" class="dropdown-flag">
+            <div class="cart-item-details">
+                <strong>{{ '%.2f'|format(item.amount) }} {{ item.code }}</strong>
+                <span class="cart-item-name">{{ item.name }}</span>
+            </div>
+            <span class="cart-item-cost">${{ '%.2f'|format(item.aud_cost) }} AUD</span>
+            <form method="POST" action="{{ url_for('cart_remove', index=item.index) }}">
+                <button type="submit" class="cart-remove-btn" aria-label="Remove {{ item.code }} from cart">&times;</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="cart-summary">
+        <span>Total</span>
+        <strong>${{ '%.2f'|format(total_aud) }} AUD</strong>
+    </div>
+    <div class="cart-actions">
+        <a href="/buy-currency" class="btn-primary btn-secondary-action">Add More Currency</a>
+        <a href="{{ url_for('checkout') }}" class="btn-primary">Checkout</a>
+    </div>
+
+    {% else %}
+    <p class="cart-empty">Your cart is empty.</p>
+    <a href="/buy-currency" class="btn-primary">Browse Currencies</a>
+    {% endif %}
+</section>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "layouts.html" %}
+{% block content %}
+<section class="auth-section">
+    <div class="auth-panel">
+    <div class="auth-brand">
+        <img src="/static/images/vista-logo.webp" alt="" class="auth-brand-logo">
+        <h1>Welcome Back</h1>
+        <p>Log in to check out and complete your currency order.</p>
+    </div>
+
+
+        <div class="auth-form-wrap">
+            <form class="auth-form" method="POST">
+                <h2>Log In</h2>
+                <p class="auth-subtitle">Enter your details to access your account.</p>
+
+                {% if error %}<p class="auth-error">{{ error }}</p>{% endif %}
+
+                <div class="auth-field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="auth-field">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn-primary auth-submit">Log In</button>
+
+                <p class="auth-switch">No account? <a href="{{ url_for('register', next=request.args.get('next')) }}">Create one</a></p>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

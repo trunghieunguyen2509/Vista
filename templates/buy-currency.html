@@ -6,21 +6,20 @@
         <h1>BUY<br>FOREIGN CURRENCY<br>AT THE <span class="highlight">BEST RATE</span></h1>
         <p>Fast and fee-free: get your foreign currency at top rates in just 24 hours.</p>
     </div>
-    <div class="converter-card">
-        <h2>Convert Australian Dollar</h2>
-        <p id="rate-display">Select a currency to see rate</p>
+    <form class="converter-card" id="converter-form" method="POST" action="/cart/add">
+    <h2>Convert Australian Dollar</h2>
+    <p id="rate-display">Select a currency to see rate</p>
 
-        <!-- AUD Input -->
-        <div class="input-row">
-            <label for="aud-input">
-                <img src="https://flagcdn.com/w40/au.png" alt="" class="dropdown-flag">
-                <strong>AUD - Australian Dollar</strong>
-            </label>
-            <input type="number" id="aud-input" placeholder="0.00" aria-label="Amount in Australian Dollars">
+    <!-- AUD Input -->
+    <div class="input-row">
+        <label for="aud-input">
+            <img src="https://flagcdn.com/w40/au.png" alt="" class="dropdown-flag">
+            <strong>AUD - Australian Dollar</strong>
+        </label>
+        <input type="number" id="aud-input" placeholder="0.00" aria-label="Amount in Australian Dollars" step ="0.01">
+    </div>
 
-        </div>
-
-        <!-- Foreign Input + Dropdown -->
+    <!-- Foreign Input + Dropdown -->
     <div class="input-row">
         <div class="currency-dropdown" id="currency-dropdown">
             <button type="button" class="dropdown-toggle" id="dropdown-toggle"
@@ -40,17 +39,21 @@
             </ul>
         </div>
 
-    <select id="currency-select">
-        {% for currency in currencies if currency.code != 'AUD' %}
-        <option value="{{ currency.code }}" data-rate="{{ currency.rate }}">
-            {{ currency.code }} - {{ currency.name }}
-        </option>
-        {% endfor %}
-    </select>
+        <select id="currency-select" name="code">
+            {% for currency in currencies if currency.code != 'AUD' %}
+            <option value="{{ currency.code }}" data-rate="{{ currency.rate }}" data-denominations="{{ currency.denominations | tojson }}">
+                {{ currency.code }} - {{ currency.name }}
+            </option>
 
-    <input type="number" id="foreign-input" placeholder="0.00">
-</div>
+            {% endfor %}
+        </select>
+
+        <input type="number" id="foreign-input" name="amount" placeholder="0.00" min="0" step="0.01" required>
     </div>
+
+    <button type="submit" class="btn-primary cart-add-btn">Add to Cart</button>
+</form>
+
 </section>
 
 <!-- Place script tag at bottom after DOM elements exist -->

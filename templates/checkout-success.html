@@ -1,0 +1,24 @@
+{% extends "layouts.html" %}
+{% block content %}
+<section class="cart-list-section">
+    <h2 class="section-title">Order Confirmed</h2>
+    <p class="checkout-note">Order #{{ order_id }} placed successfully. (Demo mode — no real payment was taken.)</p>
+    <div class="cart-list">
+        {% for item in cart_items %}
+        <div class="cart-item">
+            <img src="https://flagcdn.com/w40/{{ item.flag }}.png" alt="" class="dropdown-flag">
+            <div class="cart-item-details">
+                <strong>{{ '%.2f'|format(item.amount) }} {{ item.code }}</strong>
+                <span class="cart-item-name">{{ item.name }}</span>
+            </div>
+            <span class="cart-item-cost">${{ '%.2f'|format(item.aud_cost) }} AUD</span>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="cart-summary">
+        <span>Total Paid</span>
+        <strong>${{ '%.2f'|format(total_aud) }} AUD</strong>
+    </div>
+    <a href="/buy-currency" class="btn-primary">Continue Shopping</a>
+</section>
+{% endblock %}

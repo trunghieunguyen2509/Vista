@@ -44,12 +44,6 @@ foreignInput.addEventListener('input', () => {
     // 💡 Try applying the same isNaN() pattern here for foreignInput!
 });
 
-select.addEventListener('change', () => {
-    updateRateDisplay();
-    if (audInput.value) {
-        audInput.dispatchEvent(new Event('input'));
-    }
-});
 
 // 4. Run on load
 updateRateDisplay();
@@ -59,6 +53,42 @@ const dropdownToggle = document.getElementById('dropdown-toggle');
 const dropdownList = document.getElementById('dropdown-list');
 const selectedFlag = document.getElementById('selected-flag');
 const selectedLabel = document.getElementById('selected-label');
+
+// 6. Snap the foreign amount to the nearest note denomination available,
+// so customers can only request amounts we can actually hand over —
+// otherwise we'd have to round up and effectively overcharge them.
+function getDenominations() {
+    const selectedOption = select.options[select.selectedIndex];
+    try {
+        return JSON.parse(selectedOption.dataset.denominations || '[]');
+    } catch {
+        return [];
+    }
+}
+
+function snapToDenomination(amount, denominations) {
+    if (!denominations.length || isNaN(amount) || amount <= 0) return amount;
+    const unit = Math.min(...denominations);
+    return Math.round(amount / unit) * unit;
+}
+
+function applyDenominationSnap() {
+    const rate = getRate();
+    const foreignVal = parseFloat(foreignInput.value);
+    if (isNaN(foreignVal) || foreignVal <= 0) return;
+
+    const snapped = snapToDenomination(foreignVal, getDenominations());
+    foreignInput.value = snapped.toFixed(2);
+    audInput.value = (snapped / rate).toFixed(2);
+}
+
+// Snap on blur (works whichever field the customer typed into, since
+// foreignInput always holds the live-synced foreign amount by then)
+foreignInput.addEventListener('blur', applyDenominationSnap);
+
+// Safety net: re-snap right before the "Add to Cart" submit fires, in case
+// the customer hits Enter without blurring the field first
+document.getElementById('converter-form').addEventListener('submit', applyDenominationSnap);
 
 dropdownToggle.addEventListener('click', () => {
     const isOpen = !dropdownList.hidden;

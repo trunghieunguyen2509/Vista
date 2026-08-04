@@ -1,0 +1,26 @@
+{% extends "layouts.html" %}
+{% block content %}
+<section class="cart-list-section">
+    <h2 class="section-title">Checkout</h2>
+    <div class="cart-list">
+        {% for item in cart_items %}
+        <div class="cart-item">
+            <img src="https://flagcdn.com/w40/{{ item.flag }}.png" alt="" class="dropdown-flag">
+            <div class="cart-item-details">
+                <strong>{{ '%.2f'|format(item.amount) }} {{ item.code }}</strong>
+                <span class="cart-item-name">{{ item.name }}</span>
+            </div>
+            <span class="cart-item-cost">${{ '%.2f'|format(item.aud_cost) }} AUD</span>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="cart-summary">
+        <span>Total</span>
+        <strong>${{ '%.2f'|format(total_aud) }} AUD</strong>
+    </div>
+    <form method="POST" action="{{ url_for('checkout') }}">
+        <p class="checkout-note">This is a demo checkout — no real payment will be processed.</p>
+        <button type="submit" class="btn-primary cart-add-btn">Confirm Order</button>
+    </form>
+</section>
+{% endblock %}

@@ -19,12 +19,16 @@
             <img src="/static/images/vista-logo.webp" class="logo-strip-bg" width="200" height="100">
         </a>
         <nav class="navigation">
-            <!-- 5 navigation links go here -->
             <a href="/buy-currency">Buy Currency</a>
             <a href="/reserve">Reserve</a>
             <a href="/news">News</a>
             <a href="/contact">Contact</a>
+            <a href="/cart">Cart</a>
+            {% if session.get('user_email') %}
+            <a href="/logout">Logout ({{ session['user_email'] }})</a>
+            {% else %}
             <a href="/login">Login</a>
+            {% endif %}
         </nav>
     </header>
 
