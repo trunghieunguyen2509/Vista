@@ -1,3 +1,4 @@
 #ignore these files
 implementation_plan.md
 Product_Description_Document.docx
+.env
