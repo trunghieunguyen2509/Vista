@@ -1,0 +1,24 @@
+{% extends "layouts.html" %}
+{% block content %}
+<section class="cart-list-section">
+    <h2 class="section-title">Reservation Confirmed</h2>
+    <p class="checkout-note">Reservation #{{ reservation_id }} confirmed. Pick up on {{ pickup_date }}.</p>
+    <div class="cart-list">
+        {% for item in reserve_items %}
+        <div class="cart-item">
+            <img src="https://flagcdn.com/w40/{{ item.flag }}.png" alt="" class="dropdown-flag">
+            <div class="cart-item-details">
+                <strong>{{ '%.2f'|format(item.amount) }} {{ item.code }}</strong>
+                <span class="cart-item-name">{{ item.name }}</span>
+            </div>
+            <span class="cart-item-cost">${{ '%.2f'|format(item.aud_cost) }} AUD</span>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="cart-summary">
+        <span>Total</span>
+        <strong>${{ '%.2f'|format(total_aud) }} AUD</strong>
+    </div>
+    <a href="/" class="btn-primary">Back to Home</a>
+</section>
+{% endblock %}

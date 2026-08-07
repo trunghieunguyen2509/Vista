@@ -1,0 +1,55 @@
+{% extends "layouts.html" %}
+{% block content %}
+
+<section class="cart-list-section">
+    <h2 class="section-title">Reserve Currency</h2>
+    <p class="checkout-note">Add the currencies you'd like, then choose a pick-up date.</p>
+
+    <form method="POST" action="{{ url_for('reserve_add') }}" class="converter-card">
+        <h2>Add Currency</h2>
+        <div class="reserve-input-row">
+            <select name="code" id="reserve-currency-select" required>
+                {% for currency in currencies if currency.code != 'AUD' %}
+                <option value="{{ currency.code }}" data-rate="{{ currency.rate }}">{{ currency.code }} - {{ currency.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="number" name="amount" placeholder="0.00" min="0" step="0.01" required aria-label="Amount">
+        </div>
+        <p id="rate-display">Select a currency to see rate</p>
+        <button type="submit" class="btn-primary cart-add-btn">Add to Reservation</button>
+
+    </form>
+
+    {% if reserve_items %}
+    <div class="cart-list">
+        {% for item in reserve_items %}
+        <div class="cart-item">
+            <img src="https://flagcdn.com/w40/{{ item.flag }}.png" alt="" class="dropdown-flag">
+            <div class="cart-item-details">
+                <strong>{{ '%.2f'|format(item.amount) }} {{ item.code }}</strong>
+                <span class="cart-item-name">{{ item.name }}</span>
+                <span class="cart-item-name">1 AUD = {{ '%.4f'|format(item.rate) }} {{ item.code }}</span>
+            </div>
+
+            <span class="cart-item-cost">${{ '%.2f'|format(item.aud_cost) }} AUD</span>
+            <form method="POST" action="{{ url_for('reserve_remove', index=item.index) }}">
+                <button type="submit" class="cart-remove-btn" aria-label="Remove {{ item.code }} from reservation">&times;</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="cart-summary">
+        <span>Total</span>
+        <strong>${{ '%.2f'|format(total_aud) }} AUD</strong>
+    </div>
+    <div class="cart-actions">
+        <a href="{{ url_for('reserve_checkout') }}" class="btn-primary">Proceed to Reserve</a>
+    </div>
+    {% else %}
+    <p class="cart-empty">No currency added yet.</p>
+    {% endif %}
+</section>
+<script src="{{ url_for('static', filename='reserve.js') }}"></script>
+
+{% endblock %}

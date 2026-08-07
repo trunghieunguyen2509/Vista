@@ -47,6 +47,8 @@ foreignInput.addEventListener('input', () => {
 
 // 4. Run on load
 updateRateDisplay();
+select.addEventListener('change', updateRateDisplay);
+
 
 // 5. Custom currency dropdown (flags)
 const dropdownToggle = document.getElementById('dropdown-toggle');

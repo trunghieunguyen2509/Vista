@@ -1,0 +1,36 @@
+{% extends "layouts.html" %}
+{% block content %}
+<section class="cart-list-section">
+    <h2 class="section-title">Confirm Reservation</h2>
+
+    {% if error %}
+    <p class="auth-error">{{ error }}</p>
+    {% endif %}
+
+    <div class="cart-list">
+        {% for item in reserve_items %}
+        <div class="cart-item">
+            <img src="https://flagcdn.com/w40/{{ item.flag }}.png" alt="" class="dropdown-flag">
+            <div class="cart-item-details">
+                <strong>{{ '%.2f'|format(item.amount) }} {{ item.code }}</strong>
+                <span class="cart-item-name">{{ item.name }}</span>
+            </div>
+            <span class="cart-item-cost">${{ '%.2f'|format(item.aud_cost) }} AUD</span>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="cart-summary">
+        <span>Total</span>
+        <strong>${{ '%.2f'|format(total_aud) }} AUD</strong>
+    </div>
+
+    <form method="POST" action="{{ url_for('reserve_checkout') }}">
+        <div class="reserve-input-row">
+            <label for="pickup_date"><strong>Pick-up Date</strong></label>
+            <input type="date" id="pickup_date" name="pickup_date" min="{{ min_pickup_date }}" required>
+        </div>
+        <p class="checkout-note">Pick-up is available from {{ min_pickup_date }} onward.</p>
+        <button type="submit" class="btn-primary cart-add-btn">Reserve Currency</button>
+    </form>
+</section>
+{% endblock %}

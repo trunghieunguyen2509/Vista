@@ -1,0 +1,25 @@
+{% extends "layouts.html" %}
+{% block content %}
+<section class="cart-list-section">
+    <h2 class="section-title">Orders (Admin)</h2>
+
+    {% if orders %}
+    <div class="cart-list">
+        {% for o in orders %}
+        <div class="cart-item">
+            <div class="cart-item-details">
+                <strong>#{{ o.id }} — {{ o.email }}</strong>
+                <span class="cart-item-name">Placed: {{ o.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                <span class="cart-item-name">
+                    {% for item in o['items'] %}{{ '%.2f'|format(item.amount) }} {{ item.code }}{% if not loop.last %}, {% endif %}{% endfor %}
+                </span>
+            </div>
+            <span class="cart-item-cost">${{ '%.2f'|format(o.total_aud) }} AUD</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="cart-empty">No orders yet.</p>
+    {% endif %}
+</section>
+{% endblock %}
