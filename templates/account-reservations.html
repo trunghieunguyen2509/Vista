@@ -1,0 +1,52 @@
+{% extends "account-base.html" %}
+{% from "_macros.html" import app_badge, app_pagination, app_history_filter_bar %}
+{% block account_content %}
+<div class="app-page-header">
+    <div>
+        <h1 class="app-page-title">{{ 'Reservation History' if history else 'Upcoming Reservations' }}</h1>
+        <p class="app-page-subtitle">{{ pagination.total }} reservation(s){% if status_filter %} with status &ldquo;{{ status_filter }}&rdquo;{% endif %}</p>
+    </div>
+</div>
+
+{% if history %}
+{{ app_history_filter_bar('account_reservations_history', status_filter, query, date_from, date_to, 'Reservation number…') }}
+{% endif %}
+
+<div class="app-panel">
+    {% if reservations %}
+    <div class="app-table-wrap">
+        <table class="app-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Currency</th>
+                    <th>Pick-up</th>
+                    <th>Status</th>
+                    <th class="is-numeric">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in reservations %}
+                <tr>
+                    <td><a href="{{ url_for('account_reservation_detail', reservation_id=r.id) }}" class="app-table-link">#{{ r.id }}</a></td>
+                    <td>{% for item in r['items'] %}{{ '%.2f'|format(item.amount) }} {{ item.code }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                    <td class="app-table-meta">{{ r.pickup_date }}</td>
+                    <td>{{ app_badge(r.status) }}</td>
+                    <td class="is-numeric">${{ '%.2f'|format(r.total_aud) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ app_pagination('account_reservations_history' if history else 'account_reservations', pagination, {'status': status_filter, 'q': query, 'from': date_from, 'to': date_to} if history else {}) }}
+    {% else %}
+    <div class="app-empty-state">
+        <p class="app-empty-state-title">{% if history %}No past reservations found{% else %}No upcoming reservations{% endif %}</p>
+        <p class="app-empty-state-body">
+            {% if history %}Try adjusting your filters.{% else %}Book a pickup and it'll show up here.{% endif %}
+        </p>
+        {% if not history %}<a href="{{ url_for('reserve') }}" class="app-btn app-btn-primary">Reserve Currency</a>{% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

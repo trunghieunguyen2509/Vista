@@ -3,3 +3,5 @@ requests
 python-dotenv
 APScheduler
 psycopg2-binary
+tzdata
+feedparser

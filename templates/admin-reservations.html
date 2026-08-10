@@ -1,34 +1,57 @@
-{% extends "layouts.html" %}
-{% block content %}
-<section class="cart-list-section">
-    <h2 class="section-title">Reservations (Admin)</h2>
-
-    {% if reservations %}
-    <div class="cart-list">
-        {% for r in reservations %}
-        <div class="cart-item">
-            <div class="cart-item-details">
-                <strong>#{{ r.id }} — {{ r.email }}</strong>
-                <span class="cart-item-name">
-                    Pick-up: {{ r.pickup_date }} | Placed: {{ r.created_at.strftime('%Y-%m-%d %H:%M') }}
-                </span>
-                <span class="cart-item-name">
-                    {% for item in r['items'] %}{{ '%.2f'|format(item.amount) }} {{ item.code }}{% if not loop.last %}, {% endif %}{% endfor %}
-                </span>
-            </div>
-            <span class="cart-item-cost">${{ '%.2f'|format(r.total_aud) }} AUD</span>
-            <form method="POST" action="{{ url_for('admin_reservation_status', reservation_id=r.id) }}">
-                <select name="status" onchange="this.form.submit()">
-                    <option value="pending" {% if r.status == 'pending' %}selected{% endif %}>Pending</option>
-                    <option value="fulfilled" {% if r.status == 'fulfilled' %}selected{% endif %}>Fulfilled</option>
-                    <option value="cancelled" {% if r.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
-                </select>
-            </form>
-        </div>
-        {% endfor %}
+{% extends "admin-base.html" %}
+{% from "_macros.html" import app_filter_bar, sortable_th, app_badge, app_pagination %}
+{% block admin_content %}
+<div class="app-page-header">
+    <div>
+        <h1 class="app-page-title">Reservations</h1>
+        <p class="app-page-subtitle">
+            {{ pagination.total }} reservation(s){% if status_filter %} with status &ldquo;{{ status_filter }}&rdquo;{% endif %}{% if query %} matching &ldquo;{{ query }}&rdquo;{% endif %}
+        </p>
     </div>
+</div>
+
+{{ app_filter_bar('admin_reservations', status_filter, query) }}
+
+<div class="app-panel">
+    {% if reservations %}
+    <div class="app-table-wrap">
+        <table class="app-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Currency</th>
+                    {{ sortable_th('admin_reservations', 'pickup_date', 'Pick-up', status_filter, query, sort, dir) }}
+                    {{ sortable_th('admin_reservations', 'created_at', 'Placed', status_filter, query, sort, dir) }}
+                    <th>Assigned</th>
+                    <th>Status</th>
+                    {{ sortable_th('admin_reservations', 'total_aud', 'Total', status_filter, query, sort, dir, numeric=True) }}
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in reservations %}
+                <tr>
+                    <td><a href="{{ url_for('admin_reservation_detail', reservation_id=r.id) }}" class="app-table-link">#{{ r.id }}</a></td>
+                    <td>{{ r.email }}</td>
+                    <td>{% for item in r['items'] %}{{ '%.2f'|format(item.amount) }} {{ item.code }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                    <td>{{ r.pickup_date }}</td>
+                    <td class="app-table-meta">{{ r.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ r.assignee_email or '—' }}</td>
+                    <td>{{ app_badge(r.status) }}</td>
+                    <td class="is-numeric">${{ '%.2f'|format(r.total_aud) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ app_pagination('admin_reservations', pagination, {'status': status_filter, 'q': query, 'sort': sort, 'dir': dir}) }}
     {% else %}
-    <p class="cart-empty">No reservations yet.</p>
+    <div class="app-empty-state">
+        <p class="app-empty-state-title">No reservations found</p>
+        <p class="app-empty-state-body">
+            {% if status_filter or query %}Try clearing your filters to see all reservations.{% else %}Reservations will appear here once customers book a currency pickup.{% endif %}
+        </p>
+    </div>
     {% endif %}
-</section>
+</div>
 {% endblock %}

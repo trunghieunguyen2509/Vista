@@ -1,0 +1,84 @@
+{% extends "account-base.html" %}
+{% from "_macros.html" import app_badge %}
+{% block account_content %}
+<div class="app-page-header">
+    <div>
+        <h1 class="app-page-title">{{ entity_type|capitalize }} #{{ entity.id }}</h1>
+    </div>
+    {{ app_badge(entity.status) }}
+</div>
+
+<div class="app-panel">
+    <div class="app-panel-header">
+        <h2 class="app-panel-title">Details</h2>
+    </div>
+    <div class="app-panel-body">
+        <dl class="app-meta-list app-meta-list-spaced">
+            {% if entity_type == 'reservation' %}
+            <dt>Pick-up date</dt>
+            <dd>{{ entity.pickup_date }}</dd>
+            {% endif %}
+            <dt>Placed</dt>
+            <dd>{{ entity.created_at.strftime('%Y-%m-%d %H:%M') }}</dd>
+            {% if entity_type == 'reservation' and entity.notes %}
+            <dt>Your notes</dt>
+            <dd>{{ entity.notes }}</dd>
+            {% endif %}
+        </dl>
+
+        <div class="app-table-wrap">
+            <table class="app-table">
+                <thead>
+                    <tr>
+                        <th>Currency</th>
+                        <th class="is-numeric">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in entity['items'] %}
+                    <tr>
+                        <td>{{ item.code }}</td>
+                        <td class="is-numeric">{{ '%.2f'|format(item.amount) }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td class="is-numeric"><strong>${{ '%.2f'|format(entity.total_aud) }} AUD</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="app-panel">
+    <div class="app-panel-header">
+        <h2 class="app-panel-title">Status History</h2>
+    </div>
+    {% if timeline %}
+    <div class="app-table-wrap">
+        <table class="app-table">
+            <thead>
+                <tr>
+                    <th>When</th>
+                    <th>Change</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in timeline %}
+                <tr>
+                    <td class="app-table-meta">{{ entry.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ entry.detail }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="app-empty-state">
+        <p class="app-empty-state-title">No status changes yet</p>
+        <p class="app-empty-state-body">This will update as your {{ entity_type }} progresses.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,25 +1,55 @@
-{% extends "layouts.html" %}
-{% block content %}
-<section class="cart-list-section">
-    <h2 class="section-title">Orders (Admin)</h2>
-
-    {% if orders %}
-    <div class="cart-list">
-        {% for o in orders %}
-        <div class="cart-item">
-            <div class="cart-item-details">
-                <strong>#{{ o.id }} — {{ o.email }}</strong>
-                <span class="cart-item-name">Placed: {{ o.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
-                <span class="cart-item-name">
-                    {% for item in o['items'] %}{{ '%.2f'|format(item.amount) }} {{ item.code }}{% if not loop.last %}, {% endif %}{% endfor %}
-                </span>
-            </div>
-            <span class="cart-item-cost">${{ '%.2f'|format(o.total_aud) }} AUD</span>
-        </div>
-        {% endfor %}
+{% extends "admin-base.html" %}
+{% from "_macros.html" import app_filter_bar, sortable_th, app_badge, app_pagination %}
+{% block admin_content %}
+<div class="app-page-header">
+    <div>
+        <h1 class="app-page-title">Orders</h1>
+        <p class="app-page-subtitle">
+            {{ pagination.total }} order(s){% if status_filter %} with status &ldquo;{{ status_filter }}&rdquo;{% endif %}{% if query %} matching &ldquo;{{ query }}&rdquo;{% endif %}
+        </p>
     </div>
+</div>
+
+{{ app_filter_bar('admin_orders', status_filter, query) }}
+
+<div class="app-panel">
+    {% if orders %}
+    <div class="app-table-wrap">
+        <table class="app-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Currency</th>
+                    {{ sortable_th('admin_orders', 'created_at', 'Placed', status_filter, query, sort, dir) }}
+                    <th>Assigned</th>
+                    <th>Status</th>
+                    {{ sortable_th('admin_orders', 'total_aud', 'Total', status_filter, query, sort, dir, numeric=True) }}
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in orders %}
+                <tr>
+                    <td><a href="{{ url_for('admin_order_detail', order_id=o.id) }}" class="app-table-link">#{{ o.id }}</a></td>
+                    <td>{{ o.email }}</td>
+                    <td>{% for item in o['items'] %}{{ '%.2f'|format(item.amount) }} {{ item.code }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                    <td class="app-table-meta">{{ o.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ o.assignee_email or '—' }}</td>
+                    <td>{{ app_badge(o.status) }}</td>
+                    <td class="is-numeric">${{ '%.2f'|format(o.total_aud) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ app_pagination('admin_orders', pagination, {'status': status_filter, 'q': query, 'sort': sort, 'dir': dir}) }}
     {% else %}
-    <p class="cart-empty">No orders yet.</p>
+    <div class="app-empty-state">
+        <p class="app-empty-state-title">No orders found</p>
+        <p class="app-empty-state-body">
+            {% if status_filter or query %}Try clearing your filters to see all orders.{% else %}Orders will appear here once customers check out.{% endif %}
+        </p>
+    </div>
     {% endif %}
-</section>
+</div>
 {% endblock %}

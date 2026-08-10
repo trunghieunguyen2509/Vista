@@ -1,0 +1,36 @@
+{% extends "account-base.html" %}
+{% from "_macros.html" import toasts %}
+{% block account_content %}
+{{ toasts(success=success, error=error) }}
+
+<div class="app-page-header">
+    <div>
+        <h1 class="app-page-title">Profile</h1>
+        <p class="app-page-subtitle">Your personal details.</p>
+    </div>
+</div>
+
+<div class="app-panel">
+    <div class="app-panel-body">
+        <form method="POST">
+            <div class="app-field">
+                <label for="full_name">Full Name</label>
+                <input type="text" id="full_name" name="full_name" value="{{ full_name }}" maxlength="120" placeholder="Your name">
+            </div>
+            <div class="app-field">
+                <label for="email" class="required">Email</label>
+                <input type="email" id="email" name="email" value="{{ email }}" required>
+            </div>
+            <div class="app-field">
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" name="phone" value="{{ phone }}" maxlength="40" placeholder="Your phone number">
+            </div>
+            <div class="app-field">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" rows="3" maxlength="300" placeholder="Your address">{{ address }}</textarea>
+            </div>
+            <button type="submit" class="app-btn app-btn-primary">Save Changes</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

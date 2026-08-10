@@ -1,0 +1,36 @@
+{% extends "account-base.html" %}
+{% from "_macros.html" import toasts %}
+{% block account_content %}
+{{ toasts(success=success, error=error) }}
+
+<div class="app-page-header">
+    <div>
+        <h1 class="app-page-title">Security</h1>
+        <p class="app-page-subtitle">Change your password. Updating it signs you out of any other active sessions.</p>
+    </div>
+</div>
+
+<div class="app-panel">
+    <div class="app-panel-header">
+        <h2 class="app-panel-title">Change Password</h2>
+    </div>
+    <div class="app-panel-body">
+        <form method="POST">
+            <div class="app-field">
+                <label for="current_password" class="required">Current Password</label>
+                <input type="password" id="current_password" name="current_password" required>
+            </div>
+            <div class="app-field">
+                <label for="new_password" class="required">New Password</label>
+                <input type="password" id="new_password" name="new_password" required>
+                <p class="app-field-hint">At least 8 characters.</p>
+            </div>
+            <div class="app-field">
+                <label for="confirm_password" class="required">Confirm New Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+            </div>
+            <button type="submit" class="app-btn app-btn-primary">Update Password</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,4 +1,5 @@
 {% extends "layouts.html" %}
+{% from "_macros.html" import item_row %}
 {% block content %}
 
 <section class="cart-list-section">
@@ -7,17 +8,7 @@
     {% if cart_items %}
     <div class="cart-list">
         {% for item in cart_items %}
-        <div class="cart-item">
-            <img src="https://flagcdn.com/w40/{{ item.flag }}.png" alt="" class="dropdown-flag">
-            <div class="cart-item-details">
-                <strong>{{ '%.2f'|format(item.amount) }} {{ item.code }}</strong>
-                <span class="cart-item-name">{{ item.name }}</span>
-            </div>
-            <span class="cart-item-cost">${{ '%.2f'|format(item.aud_cost) }} AUD</span>
-            <form method="POST" action="{{ url_for('cart_remove', index=item.index) }}">
-                <button type="submit" class="cart-remove-btn" aria-label="Remove {{ item.code }} from cart">&times;</button>
-            </form>
-        </div>
+        {{ item_row(item, remove_endpoint='cart_remove', remove_label='cart') }}
         {% endfor %}
     </div>
 

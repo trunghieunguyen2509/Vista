@@ -1,0 +1,95 @@
+{% extends "account-base.html" %}
+{% from "_macros.html" import app_badge %}
+{% block account_content %}
+<div class="app-page-header">
+    <div>
+        <h1 class="app-page-title">Overview</h1>
+        <p class="app-page-subtitle">{{ full_name or email }} · Member since {{ member_since.strftime('%Y-%m-%d') }}</p>
+    </div>
+</div>
+
+<div class="app-stats-grid">
+    <div class="app-stat-card">
+        <span class="app-stat-value">{{ active_orders }}</span>
+        <span class="app-stat-label">Active Orders</span>
+    </div>
+    <div class="app-stat-card">
+        <span class="app-stat-value">{{ active_reservations }}</span>
+        <span class="app-stat-label">Active Reservations</span>
+    </div>
+</div>
+
+<div class="app-panel">
+    <div class="app-panel-header">
+        <h2 class="app-panel-title">Recent Orders</h2>
+        <a href="{{ url_for('account_orders') }}" class="app-btn app-btn-ghost">View all</a>
+    </div>
+    {% if recent_orders %}
+    <div class="app-table-wrap">
+        <table class="app-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Placed</th>
+                    <th>Status</th>
+                    <th class="is-numeric">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in recent_orders %}
+                <tr>
+                    <td><a href="{{ url_for('account_order_detail', order_id=o.id) }}" class="app-table-link">#{{ o.id }}</a></td>
+                    <td class="app-table-meta">{{ o.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ app_badge(o.status) }}</td>
+                    <td class="is-numeric">${{ '%.2f'|format(o.total_aud) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="app-empty-state">
+        <p class="app-empty-state-title">No orders yet</p>
+        <p class="app-empty-state-body">Once you check out, your orders will show up here.</p>
+        <a href="{{ url_for('buy_currency') }}" class="app-btn app-btn-primary">Browse Currencies</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="app-panel">
+    <div class="app-panel-header">
+        <h2 class="app-panel-title">Recent Reservations</h2>
+        <a href="{{ url_for('account_reservations') }}" class="app-btn app-btn-ghost">View all</a>
+    </div>
+    {% if recent_reservations %}
+    <div class="app-table-wrap">
+        <table class="app-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Pick-up</th>
+                    <th>Status</th>
+                    <th class="is-numeric">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in recent_reservations %}
+                <tr>
+                    <td><a href="{{ url_for('account_reservation_detail', reservation_id=r.id) }}" class="app-table-link">#{{ r.id }}</a></td>
+                    <td class="app-table-meta">{{ r.pickup_date }}</td>
+                    <td>{{ app_badge(r.status) }}</td>
+                    <td class="is-numeric">${{ '%.2f'|format(r.total_aud) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="app-empty-state">
+        <p class="app-empty-state-title">No reservations yet</p>
+        <p class="app-empty-state-body">Book a pickup and it'll show up here.</p>
+        <a href="{{ url_for('reserve') }}" class="app-btn app-btn-primary">Reserve Currency</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

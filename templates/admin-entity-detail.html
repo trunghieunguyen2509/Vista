@@ -1,0 +1,151 @@
+{% extends "admin-base.html" %}
+{% from "_macros.html" import app_badge %}
+{% block admin_content %}
+<div class="app-page-header">
+    <div>
+        <h1 class="app-page-title">{{ entity_type|capitalize }} #{{ entity.id }}</h1>
+        <p class="app-page-subtitle">{{ entity.email }}</p>
+    </div>
+    {{ app_badge(entity.status) }}
+</div>
+
+<div class="app-panel">
+    <div class="app-panel-header">
+        <h2 class="app-panel-title">Details</h2>
+    </div>
+    <div class="app-panel-body">
+        <dl class="app-meta-list app-meta-list-spaced">
+            {% if entity_type == 'reservation' %}
+            <dt>Pick-up date</dt>
+            <dd>{{ entity.pickup_date }}</dd>
+            {% endif %}
+            <dt>Placed</dt>
+            <dd>{{ entity.created_at.strftime('%Y-%m-%d %H:%M') }}</dd>
+            <dt>Assigned to</dt>
+            <dd>{{ entity.assignee_email or 'Unassigned' }}</dd>
+            {% if entity_type == 'reservation' and entity.notes %}
+            <dt>Customer notes</dt>
+            <dd>{{ entity.notes }}</dd>
+            {% endif %}
+        </dl>
+
+        <div class="app-table-wrap">
+            <table class="app-table">
+                <thead>
+                    <tr>
+                        <th>Currency</th>
+                        <th class="is-numeric">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in entity['items'] %}
+                    <tr>
+                        <td>{{ item.code }}</td>
+                        <td class="is-numeric">{{ '%.2f'|format(item.amount) }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td class="is-numeric"><strong>${{ '%.2f'|format(entity.total_aud) }} AUD</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="app-actions-grid">
+    <div class="app-panel">
+        <div class="app-panel-header">
+            <h2 class="app-panel-title">Change Status</h2>
+        </div>
+        <div class="app-panel-body">
+            <form method="POST" action="{{ status_url }}">
+                <div class="app-field">
+                    <label for="status">Status</label>
+                    <select name="status" id="status">
+                        <option value="pending" {% if entity.status == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="fulfilled" {% if entity.status == 'fulfilled' %}selected{% endif %}>Fulfilled</option>
+                        <option value="cancelled" {% if entity.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                    </select>
+                </div>
+                <button type="submit" class="app-btn app-btn-primary">Update Status</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="app-panel">
+        <div class="app-panel-header">
+            <h2 class="app-panel-title">Assign To</h2>
+        </div>
+        <div class="app-panel-body">
+            <form method="POST" action="{{ assign_url }}">
+                <div class="app-field">
+                    <label for="assigned_to">Staff member</label>
+                    <select name="assigned_to" id="assigned_to">
+                        <option value="">Unassigned</option>
+                        {% for member in staff %}
+                        <option value="{{ member.id }}" {% if entity.assignee_email == member.email %}selected{% endif %}>{{ member.email }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="app-btn app-btn-outline">Update Assignment</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="app-panel">
+    <div class="app-panel-header">
+        <h2 class="app-panel-title">Add Internal Note</h2>
+    </div>
+    <div class="app-panel-body">
+        <form method="POST" action="{{ note_url }}">
+            <div class="app-field">
+                <label for="note">Note <span class="app-field-hint">(visible to staff/admin only)</span></label>
+                <textarea name="note" id="note" rows="3" placeholder="Add a note for other staff…" required></textarea>
+            </div>
+            <button type="submit" class="app-btn app-btn-outline">Add Note</button>
+        </form>
+    </div>
+</div>
+
+<div class="app-panel">
+    <div class="app-panel-header">
+        <h2 class="app-panel-title">Activity History</h2>
+    </div>
+    {% if activity %}
+    <div class="app-table-wrap">
+        <table class="app-table">
+            <thead>
+                <tr>
+                    <th>When</th>
+                    <th>Who</th>
+                    <th>Type</th>
+                    <th>Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in activity %}
+                <tr>
+                    <td class="app-table-meta">{{ entry.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ entry.actor_email or 'System' }}</td>
+                    <td>
+                        {% if entry.action == 'status_change' %}Status change
+                        {% elif entry.action == 'assignment' %}Assignment
+                        {% else %}Note{% endif %}
+                    </td>
+                    <td>{{ entry.detail or '—' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="app-empty-state">
+        <p class="app-empty-state-title">No activity yet</p>
+        <p class="app-empty-state-body">Status changes, assignments and notes will be logged here.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

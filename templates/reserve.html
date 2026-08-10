@@ -1,41 +1,52 @@
 {% extends "layouts.html" %}
+{% from "_macros.html" import item_row %}
 {% block content %}
 
 <section class="cart-list-section">
     <h2 class="section-title">Reserve Currency</h2>
     <p class="checkout-note">Add the currencies you'd like, then choose a pick-up date.</p>
 
-    <form method="POST" action="{{ url_for('reserve_add') }}" class="converter-card">
+    <form method="POST" action="{{ url_for('reserve_add') }}" class="converter-card" id="reserve-add-form">
         <h2>Add Currency</h2>
-        <div class="reserve-input-row">
-            <select name="code" id="reserve-currency-select" required>
+                                        <div class="reserve-input-row">
+            <div class="currency-dropdown" id="currency-dropdown">
+                <button type="button" class="dropdown-toggle" id="dropdown-toggle"
+                        aria-haspopup="listbox" aria-expanded="false">
+                    <img src="https://flagcdn.com/w40/{{ currencies[0].flag }}.png" alt=""
+                        class="dropdown-flag" id="selected-flag">
+                    <span id="selected-label">{{ currencies[0].code }} - {{ currencies[0].name }}</span>
+                </button>
+                <ul class="dropdown-list" id="dropdown-list" role="listbox" hidden>
+                    {% for currency in currencies if currency.code != 'AUD' %}
+                    <li class="dropdown-option" role="option"
+                        data-code="{{ currency.code }}" data-name="{{ currency.name }}" data-flag="{{ currency.flag }}" data-rate="{{ currency.rate }}">
+                        <img src="https://flagcdn.com/w40/{{ currency.flag }}.png" alt="" class="dropdown-flag">
+                        <span>{{ currency.code }} - {{ currency.name }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <select id="currency-select" name="code">
                 {% for currency in currencies if currency.code != 'AUD' %}
-                <option value="{{ currency.code }}" data-rate="{{ currency.rate }}">{{ currency.code }} - {{ currency.name }}</option>
+                <option value="{{ currency.code }}" data-rate="{{ currency.rate }}" data-denominations="{{ currency.denominations | tojson }}">
+                    {{ currency.code }} - {{ currency.name }}
+                </option>
                 {% endfor %}
             </select>
-            <input type="number" name="amount" placeholder="0.00" min="0" step="0.01" required aria-label="Amount">
+
+
+            <input type="number" name="amount" id="amount-input" placeholder="0.00" min="0" step="0.01" required aria-label="Amount">
         </div>
         <p id="rate-display">Select a currency to see rate</p>
+        <p id="aud-equivalent" class="checkout-note">= $0.00 AUD</p>
         <button type="submit" class="btn-primary cart-add-btn">Add to Reservation</button>
-
     </form>
 
     {% if reserve_items %}
     <div class="cart-list">
         {% for item in reserve_items %}
-        <div class="cart-item">
-            <img src="https://flagcdn.com/w40/{{ item.flag }}.png" alt="" class="dropdown-flag">
-            <div class="cart-item-details">
-                <strong>{{ '%.2f'|format(item.amount) }} {{ item.code }}</strong>
-                <span class="cart-item-name">{{ item.name }}</span>
-                <span class="cart-item-name">1 AUD = {{ '%.4f'|format(item.rate) }} {{ item.code }}</span>
-            </div>
-
-            <span class="cart-item-cost">${{ '%.2f'|format(item.aud_cost) }} AUD</span>
-            <form method="POST" action="{{ url_for('reserve_remove', index=item.index) }}">
-                <button type="submit" class="cart-remove-btn" aria-label="Remove {{ item.code }} from reservation">&times;</button>
-            </form>
-        </div>
+        {{ item_row(item, remove_endpoint='reserve_remove', remove_label='reservation', show_rate=True) }}
         {% endfor %}
     </div>
 

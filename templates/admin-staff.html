@@ -1,0 +1,69 @@
+{% extends "admin-base.html" %}
+{% from "_macros.html" import toasts %}
+{% block admin_content %}
+{{ toasts(error=error) }}
+
+<div class="app-page-header">
+    <div>
+        <h1 class="app-page-title">Staff &amp; Roles</h1>
+        <p class="app-page-subtitle">Promote a registered customer to Staff or Admin, or change an existing member's role.</p>
+    </div>
+</div>
+
+<div class="app-panel">
+    <div class="app-panel-header">
+        <h2 class="app-panel-title">Set Role</h2>
+    </div>
+    <div class="app-panel-body">
+        <form method="POST">
+            <div class="app-field">
+                <label for="email" class="required">Account email</label>
+                <input type="email" name="email" id="email" placeholder="user@example.com" required>
+                <p class="app-field-hint">The account must already exist — ask them to register first.</p>
+            </div>
+            <div class="app-field">
+                <label for="role" class="required">Role</label>
+                <select name="role" id="role">
+                    <option value="staff">Staff</option>
+                    <option value="admin">Admin</option>
+                    <option value="customer">Customer (revoke access)</option>
+                </select>
+            </div>
+            <button type="submit" class="app-btn app-btn-primary">Save Role</button>
+        </form>
+    </div>
+</div>
+
+<div class="app-panel">
+    <div class="app-panel-header">
+        <h2 class="app-panel-title">Staff &amp; Admin Accounts</h2>
+    </div>
+    {% if staff_members %}
+    <div class="app-table-wrap">
+        <table class="app-table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Member Since</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in staff_members %}
+                <tr>
+                    <td>{{ member.email }}</td>
+                    <td><span class="app-badge app-badge-{{ member.role }}">{{ member.role }}</span></td>
+                    <td class="app-table-meta">{{ member.created_at.strftime('%Y-%m-%d') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="app-empty-state">
+        <p class="app-empty-state-title">No staff or admin accounts yet</p>
+        <p class="app-empty-state-body">Use the form above to promote a registered customer.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,17 +1,11 @@
 {% extends "layouts.html" %}
+{% from "_macros.html" import item_row %}
 {% block content %}
 <section class="cart-list-section">
     <h2 class="section-title">Checkout</h2>
     <div class="cart-list">
         {% for item in cart_items %}
-        <div class="cart-item">
-            <img src="https://flagcdn.com/w40/{{ item.flag }}.png" alt="" class="dropdown-flag">
-            <div class="cart-item-details">
-                <strong>{{ '%.2f'|format(item.amount) }} {{ item.code }}</strong>
-                <span class="cart-item-name">{{ item.name }}</span>
-            </div>
-            <span class="cart-item-cost">${{ '%.2f'|format(item.aud_cost) }} AUD</span>
-        </div>
+        {{ item_row(item) }}
         {% endfor %}
     </div>
     <div class="cart-summary">

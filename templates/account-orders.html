@@ -1,0 +1,52 @@
+{% extends "account-base.html" %}
+{% from "_macros.html" import app_badge, app_pagination, app_history_filter_bar %}
+{% block account_content %}
+<div class="app-page-header">
+    <div>
+        <h1 class="app-page-title">{{ 'Order History' if history else 'Current Orders' }}</h1>
+        <p class="app-page-subtitle">{{ pagination.total }} order(s){% if status_filter %} with status &ldquo;{{ status_filter }}&rdquo;{% endif %}</p>
+    </div>
+</div>
+
+{% if history %}
+{{ app_history_filter_bar('account_orders_history', status_filter, query, date_from, date_to, 'Order number…') }}
+{% endif %}
+
+<div class="app-panel">
+    {% if orders %}
+    <div class="app-table-wrap">
+        <table class="app-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Currency</th>
+                    <th>Placed</th>
+                    <th>Status</th>
+                    <th class="is-numeric">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in orders %}
+                <tr>
+                    <td><a href="{{ url_for('account_order_detail', order_id=o.id) }}" class="app-table-link">#{{ o.id }}</a></td>
+                    <td>{% for item in o['items'] %}{{ '%.2f'|format(item.amount) }} {{ item.code }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                    <td class="app-table-meta">{{ o.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ app_badge(o.status) }}</td>
+                    <td class="is-numeric">${{ '%.2f'|format(o.total_aud) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ app_pagination('account_orders_history' if history else 'account_orders', pagination, {'status': status_filter, 'q': query, 'from': date_from, 'to': date_to} if history else {}) }}
+    {% else %}
+    <div class="app-empty-state">
+        <p class="app-empty-state-title">{% if history %}No past orders found{% else %}No active orders{% endif %}</p>
+        <p class="app-empty-state-body">
+            {% if history %}Try adjusting your filters.{% else %}Once you check out, your orders will show up here.{% endif %}
+        </p>
+        {% if not history %}<a href="{{ url_for('buy_currency') }}" class="app-btn app-btn-primary">Browse Currencies</a>{% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,5 +1,7 @@
 {% extends "layouts.html" %}
+{% from "_macros.html" import toasts %}
 {% block content %}
+{{ toasts(success=success, error=error) }}
 <section class="auth-section">
     <div class="auth-panel">
     <div class="auth-brand">
@@ -13,9 +15,6 @@
             <form class="auth-form" method="POST">
                 <h2>Log In</h2>
                 <p class="auth-subtitle">Enter your details to access your account.</p>
-
-                {% if success %}<p class="auth-success">{{ success }}</p>{% endif %}
-                {% if error %}<p class="auth-error">{{ error }}</p>{% endif %}
 
 
                 <div class="auth-field">

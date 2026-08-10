@@ -1,0 +1,94 @@
+{% macro app_badge(status) %}
+<span class="app-badge app-badge-{{ status }}">{{ status }}</span>
+{% endmacro %}
+
+{% macro toasts(success=None, error=None) %}
+{% if success or error %}
+<div class="app-toast-stack">
+    {% if success %}
+    <div class="app-toast app-toast-success">
+        <span>{{ success }}</span>
+        <button type="button" class="app-toast-close" aria-label="Dismiss">&times;</button>
+    </div>
+    {% endif %}
+    {% if error %}
+    <div class="app-toast app-toast-error">
+        <span>{{ error }}</span>
+        <button type="button" class="app-toast-close" aria-label="Dismiss">&times;</button>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro app_filter_bar(endpoint, status_filter, query) %}
+<div class="app-toolbar">
+    <form method="GET" action="{{ url_for(endpoint) }}" class="app-toolbar-search">
+        <input type="text" name="q" value="{{ query or '' }}" placeholder="Search by customer email…" class="app-input">
+        <button type="submit" class="app-btn app-btn-outline">Search</button>
+    </form>
+    <div class="app-toolbar-group">
+        <a href="{{ url_for(endpoint, q=query or None) }}" class="app-btn app-btn-outline{% if not status_filter %} is-active{% endif %}">All</a>
+        <a href="{{ url_for(endpoint, status='pending', q=query or None) }}" class="app-btn app-btn-outline{% if status_filter == 'pending' %} is-active{% endif %}">Pending</a>
+        <a href="{{ url_for(endpoint, status='fulfilled', q=query or None) }}" class="app-btn app-btn-outline{% if status_filter == 'fulfilled' %} is-active{% endif %}">Fulfilled</a>
+        <a href="{{ url_for(endpoint, status='cancelled', q=query or None) }}" class="app-btn app-btn-outline{% if status_filter == 'cancelled' %} is-active{% endif %}">Cancelled</a>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro sortable_th(endpoint, column, label, status_filter, query, sort, dir, numeric=False) %}
+<th{% if numeric %} class="is-numeric"{% endif %}>
+    <a href="{{ url_for(endpoint, status=status_filter, q=query or None, sort=column, dir='asc' if sort == column and dir == 'desc' else 'desc') }}">
+        {{ label }}{% if sort == column %} {{ '↓' if dir == 'desc' else '↑' }}{% endif %}
+    </a>
+</th>
+{% endmacro %}
+
+{% macro app_history_filter_bar(endpoint, status_filter, query, date_from, date_to, query_placeholder) %}
+<form method="GET" action="{{ url_for(endpoint) }}" class="app-toolbar">
+    <input type="text" name="q" value="{{ query or '' }}" placeholder="{{ query_placeholder }}" class="app-input">
+    <input type="date" name="from" value="{{ date_from or '' }}" class="app-input" aria-label="From date">
+    <input type="date" name="to" value="{{ date_to or '' }}" class="app-input" aria-label="To date">
+    <select name="status" class="app-input">
+        <option value="">All statuses</option>
+        <option value="fulfilled" {% if status_filter == 'fulfilled' %}selected{% endif %}>Fulfilled</option>
+        <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+    </select>
+    <button type="submit" class="app-btn app-btn-outline">Filter</button>
+</form>
+{% endmacro %}
+
+{% macro app_pagination(endpoint, pagination, extra_args={}) %}
+{% if pagination.total_pages > 1 %}
+<div class="app-pagination">
+    <span>Page {{ pagination.page }} of {{ pagination.total_pages }} ({{ pagination.total }} total)</span>
+    <div class="app-pagination-actions">
+        {% if pagination.has_prev %}
+        <a href="{{ url_for(endpoint, page=pagination.page - 1, **extra_args) }}" class="app-btn app-btn-outline">&larr; Prev</a>
+        {% endif %}
+        {% if pagination.has_next %}
+        <a href="{{ url_for(endpoint, page=pagination.page + 1, **extra_args) }}" class="app-btn app-btn-outline">Next &rarr;</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro item_row(item, remove_endpoint=None, remove_label='list', show_rate=False) %}
+<div class="cart-item">
+    <img src="https://flagcdn.com/w40/{{ item.flag }}.png" alt="" class="dropdown-flag">
+    <div class="cart-item-details">
+        <strong>{{ '%.2f'|format(item.amount) }} {{ item.code }}</strong>
+        <span class="cart-item-name">{{ item.name }}</span>
+        {% if show_rate %}
+        <span class="cart-item-name">1 AUD = {{ '%.4f'|format(item.rate) }} {{ item.code }}</span>
+        {% endif %}
+    </div>
+    <span class="cart-item-cost">${{ '%.2f'|format(item.aud_cost) }} AUD</span>
+    {% if remove_endpoint %}
+    <form method="POST" action="{{ url_for(remove_endpoint, index=item.index) }}">
+        <button type="submit" class="cart-remove-btn" aria-label="Remove {{ item.code }} from {{ remove_label }}">&times;</button>
+    </form>
+    {% endif %}
+</div>
+{% endmacro %}

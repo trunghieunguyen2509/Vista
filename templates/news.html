@@ -1,0 +1,25 @@
+{% extends "layouts.html" %}
+{% block content %}
+<section class="cart-list-section">
+    <h2 class="section-title">AUD Currency News</h2>
+    <p class="checkout-note">Daily updates on the Australian Dollar, RBA announcements, and AUD exchange rate movements.</p>
+
+    {% if news_items %}
+    <div class="news-grid">
+        {% for item in news_items %}
+        <article class="news-card">
+            <a href="{{ item.url }}" target="_blank" rel="noopener noreferrer" class="news-card-headline">{{ item.title }}</a>
+            <p class="news-card-summary">{{ item.summary }}</p>
+            <div class="news-card-meta">
+                <span class="news-card-source">{{ item.source }}</span>
+                <span class="news-card-time">{{ item.relative_time }}</span>
+            </div>
+            <a href="{{ item.url }}" target="_blank" rel="noopener noreferrer" class="news-card-link">Read full article →</a>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="cart-empty">No AUD news yet — check back soon.</p>
+    {% endif %}
+</section>
+{% endblock %}

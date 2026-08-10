@@ -1,0 +1,81 @@
+{% extends "admin-base.html" %}
+{% block admin_content %}
+<div class="app-page-header">
+    <div>
+        <h1 class="app-page-title">Dashboard</h1>
+        <p class="app-page-subtitle">Overview of reservations, orders and recent admin activity.</p>
+    </div>
+</div>
+
+<div class="app-stats-grid">
+    <div class="app-stat-card">
+        <span class="app-stat-value">{{ pending_reservations }}</span>
+        <span class="app-stat-label">Pending Reservations</span>
+    </div>
+    <div class="app-stat-card">
+        <span class="app-stat-value">{{ pending_orders }}</span>
+        <span class="app-stat-label">Pending Orders</span>
+    </div>
+    <div class="app-stat-card">
+        <span class="app-stat-value">{{ new_reservations_7d }}</span>
+        <span class="app-stat-label">New Reservations (7d)</span>
+    </div>
+    <div class="app-stat-card">
+        <span class="app-stat-value">{{ new_orders_7d }}</span>
+        <span class="app-stat-label">New Orders (7d)</span>
+    </div>
+    <div class="app-stat-card">
+        <span class="app-stat-value">${{ '%.2f'|format(revenue_month) }}</span>
+        <span class="app-stat-label">Order Revenue (MTD)</span>
+    </div>
+    <div class="app-stat-card">
+        <span class="app-stat-value">{{ staff_count }}</span>
+        <span class="app-stat-label">Staff &amp; Admins</span>
+    </div>
+</div>
+
+<div class="app-toolbar">
+    <a href="{{ url_for('admin_reservations', status='pending') }}" class="app-btn app-btn-outline">View Pending Reservations</a>
+    <a href="{{ url_for('admin_orders', status='pending') }}" class="app-btn app-btn-outline">View Pending Orders</a>
+</div>
+
+<div class="app-panel">
+    <div class="app-panel-header">
+        <h2 class="app-panel-title">Recent Activity</h2>
+    </div>
+    {% if recent_activity %}
+    <div class="app-table-wrap">
+        <table class="app-table">
+            <thead>
+                <tr>
+                    <th>When</th>
+                    <th>Who</th>
+                    <th>Action</th>
+                    <th>Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in recent_activity %}
+                <tr>
+                    <td class="app-table-meta">{{ entry.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ entry.actor_email or 'System' }}</td>
+                    <td>
+                        {% if entry.action == 'status_change' %}Status change
+                        {% elif entry.action == 'assignment' %}Assignment
+                        {% else %}Note{% endif %}
+                        on {{ entry.entity_type }} #{{ entry.entity_id }}
+                    </td>
+                    <td>{{ entry.detail or '—' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="app-empty-state">
+        <p class="app-empty-state-title">No activity yet</p>
+        <p class="app-empty-state-body">Status changes, assignments and notes on reservations and orders will show up here as staff work through them.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -5,26 +5,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Website Layout</title>
-    <!-- Connect to a Google Font (e.g., Outfit) and your stylesheet -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename ='style.css') }}">
 </head>
 
+{% set app_shell = is_admin or in_account_area %}
 <body class="layout-container">
-    <!-- 1. Header (Logo & 5 Nav Links) -->
+    {% if app_shell %}
+    <!-- App top bar: logo, breadcrumb trail, user menu. Section nav lives in the left sidebar (admin-base.html / account-base.html). -->
+    <header class="app-topbar">
+        <button type="button" class="app-topbar-menu-toggle" id="app-sidebar-toggle" aria-label="Toggle navigation">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        {% if is_admin %}
+        <a href="{{ url_for('admin_dashboard') }}" class="app-topbar-logo">
+            <img src="/static/images/vista-logo.webp" width="28" height="28" style="object-fit:contain">
+            <span>Vista Admin</span>
+        </a>
+        {% else %}
+        <a href="{{ url_for('index') }}" class="app-topbar-logo">
+            <img src="/static/images/vista-logo.webp" width="28" height="28" style="object-fit:contain">
+            <span>Vista</span>
+        </a>
+        {% endif %}
+
+        <nav class="app-breadcrumb" aria-label="Breadcrumb">
+            {% for label, url in (breadcrumbs or []) %}
+                {% if not loop.last and url %}
+                <a href="{{ url }}">{{ label }}</a>
+                <span class="app-breadcrumb-sep">/</span>
+                {% else %}
+                <span class="app-breadcrumb-current">{{ label }}</span>
+                {% endif %}
+            {% endfor %}
+        </nav>
+
+        <div class="app-user-menu" id="app-user-menu">
+            <button type="button" class="app-user-menu-trigger" id="app-user-menu-trigger" aria-haspopup="true" aria-expanded="false">
+                <span class="app-user-avatar">{{ session['user_email'][0]|upper }}</span>
+                <span class="app-user-email">{{ session['user_email'] }}</span>
+            </button>
+            <div class="app-user-menu-panel" id="app-user-menu-panel" hidden>
+                {% if is_admin %}
+                <span class="app-user-menu-role">{{ session.get('user_role')|capitalize }}</span>
+                {% else %}
+                <a href="{{ url_for('index') }}" class="app-user-menu-link">Back to Site</a>
+                {% endif %}
+                <a href="/logout" class="app-user-menu-logout">Log out</a>
+            </div>
+        </div>
+    </header>
+    {% else %}
     <header class="header">
         <a href="/" class="logo">
-            <!-- Logo element/text goes here -->
             <img src="/static/images/vista-logo.webp" class="logo-strip-bg" width="200" height="100">
         </a>
-                <nav class="navigation">
-            {% if is_admin %}
-            <a href="{{ url_for('admin_reservations') }}">Reservations</a>
-            <a href="{{ url_for('admin_orders') }}">Orders</a>
-            <a href="/logout">Logout ({{ session['user_email'] }})</a>
-            {% else %}
+        <nav class="navigation">
             <a href="/buy-currency">Buy Currency</a>
-            <a href="/reserve">Reserve</a>
+            <a href="/reserve">Reserve Currency</a>
             <a href="/news">News</a>
             <a href="/contact">Contact</a>
 
@@ -40,23 +82,32 @@
             </a>
 
             {% if session.get('user_email') %}
-            <a href="/logout">Logout ({{ session['user_email'] }})</a>
+            <a href="{{ url_for('account_overview') }}" class="nav-account-link" aria-label="My Account">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </a>
             {% else %}
             <a href="/login">Login</a>
             {% endif %}
-            {% endif %}
         </nav>
     </header>
+    {% endif %}
+
     <!-- 2. Main Content Area -->
-    <main class="content-area">
+    <main class="content-area{% if app_shell %} app-content-area{% endif %}">
         {% block content %}
 
         {% endblock %}
     </main>
 
-    <!-- 3. Footer -->
+    {% if not app_shell %}
     <footer class="footer">
         <p>&copy; 2026 Vista Currency Exchange. All rights reserved.</p>
     </footer>
+    {% endif %}
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
